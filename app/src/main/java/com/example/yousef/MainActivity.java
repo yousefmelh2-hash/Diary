@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initComponents();
-        edittext = Et.getText().toString();
+        edittext = Et.getText().toString();//23234
 
         buttonAboutme.setOnClickListener(new View.OnClickListener() {
             @Override
