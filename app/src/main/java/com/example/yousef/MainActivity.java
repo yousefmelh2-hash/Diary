@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 inputText = Et.getText().toString();
-                readFromInternal();
+                readFromInternal(); // hi Reader!
 
             }
         });
