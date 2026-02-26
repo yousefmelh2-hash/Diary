@@ -6,26 +6,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
-    Button buttonAboutme, buttonPassin;
+    Button buttonRead, buttonPassin, buttonCreds;
     EditText Et;
     TextView tv;
     InputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String edittext;
+    String inputText;
     FileOutputStream fos;
 
     @Override
@@ -33,19 +30,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initComponents();
-        edittext = Et.getText().toString();//23234
 
-        buttonAboutme.setOnClickListener(new View.OnClickListener() {
+
+        buttonRead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                inputText = Et.getText().toString();
+                readFromInternal();
+
+            }
+        });
+        buttonPassin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inputText = Et.getText().toString();
+                writeToInternal(inputText);
+
+            }
+        });
+        buttonCreds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inputText = Et.getText().toString();
                 readRawFile();
+
             }
         });
     }
 
     private void initComponents() {
-        buttonAboutme = findViewById(R.id.buttonAboutme);
+        buttonRead = findViewById(R.id.buttonRead);
         buttonPassin = findViewById(R.id.buttonPassin);
+        buttonCreds=findViewById(R.id.buttonCreds);
         Et = findViewById(R.id.Et);
         tv = findViewById(R.id.tv);
     }
@@ -65,6 +81,41 @@ public class MainActivity extends AppCompatActivity {
                 line = br.readLine();
             }
 // הצגת הטקסט שנאסף וסגירת ערוץ הקריאה
+            tv.setText(allText);
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    // 2. פונקציית כתיבה - מקבלת את הטקסט שצריך לשמור
+    public void writeToInternal(String textToSave) {
+        try {
+// יצירה או פתיחה של הקובץ במצב פרטי ונעול
+            fos = openFileOutput("diary.txt", MODE_PRIVATE);
+// כתיבת הטקסט (חובה להשתמש ב-getBytes)
+            fos.write(textToSave.getBytes());
+// סגירת הערוץ לשמירה סופית
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    // 2. פונקציית הקריאה (זהה כמעט ל-Raw)
+    public void readFromInternal() {
+        FileInputStream fis;
+
+        try {
+// ההבדל: משתמשים ב-openFileInput
+            fis = openFileInput("diary.txt");
+            isr = new InputStreamReader(fis);
+            br = new BufferedReader(isr);
+// שאר הקוד זהה למה שלמדנו...
+            String allText = "";
+            String line = br.readLine();
+            while (line != null) {
+                allText = allText + line + "\n";
+                line = br.readLine();
+            }
             tv.setText(allText);
             br.close();
         } catch (IOException e) {
