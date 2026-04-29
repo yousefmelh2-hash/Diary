@@ -43,15 +43,17 @@ public class MainActivity extends AppCompatActivity {
         buttonPassin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                inputText = Et.getText().toString();
+                inputText = Et.getText().toString()+"\n";
                 writeToInternal(inputText);
+                Et.setText("");
+
 
             }
         });
         buttonCreds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                inputText = Et.getText().toString();
+                inputText = Et.getText().toString()+"\n";
                 readRawFile();
 
             }
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     public void writeToInternal(String textToSave) {
         try {
 // יצירה או פתיחה של הקובץ במצב פרטי ונעול
-            fos = openFileOutput("diary.txt", MODE_PRIVATE);
+            fos = openFileOutput("diary.txt", MODE_APPEND);
 // כתיבת הטקסט (חובה להשתמש ב-getBytes)
             fos.write(textToSave.getBytes());
 // סגירת הערוץ לשמירה סופית
